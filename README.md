@@ -37,9 +37,121 @@ mim install mmsegmentation
 mim install mmdet3d
 ```
 
-## Data Preparation
+# Data Preparation
 
-Follow the [MMDetection3D data preparation guidelines](https://github.com/open-mmlab/mmdetection3d/blob/master/docs/en/data_preparation.md) to process your dataset.
+This section describes how to prepare datasets for training and evaluation.
+
+## NuScenes Dataset
+
+### Download and Extract
+1. Create the data directory:
+```bash
+mkdir -p data/nuscenes
+cd data/nuscenes
+```
+
+2. Download the NuScenes dataset:
+   - Full dataset: Download from [NuScenes official website](https://www.nuscenes.org/download)
+   - Mini dataset (for testing): 
+     ```bash
+     wget https://xxx.cloudfront.net/public/v1.0/v1.0-mini.tgz
+     ```
+
+3. Extract the downloaded files:
+```bash
+# For full dataset
+tar -xzf v1.0-trainval.tgz
+tar -xzf v1.0-test.tgz
+# For mini dataset
+tar -xzf v1.0-mini.tgz
+```
+
+### Directory Structure
+After extraction, ensure your directory structure looks like this:
+```
+data/nuscenes
+├── maps
+├── samples
+├── sweeps
+├── v1.0-mini
+│   ├── attribute.json
+│   ├── category.json
+│   ├── instance.json
+│   ├── log.json
+│   ├── map.json
+│   ├── sample_annotation.json
+│   ├── sample_data.json
+│   ├── sample.json
+│   └── scene.json
+└── v1.0-trainval
+    ├── attribute.json
+    ├── category.json
+    ├── instance.json
+    ├── log.json
+    ├── map.json
+    ├── sample_annotation.json
+    ├── sample_data.json
+    ├── sample.json
+    └── scene.json
+```
+
+### Create Symbolic Link
+Create a symbolic link to the dataset in the MMDetection3D directory:
+```bash
+ln -s ../../data/nuscenes ./mmdetection3d/data/nuscenes
+```
+
+### Data Processing
+1. Install required dependencies:
+```bash
+pip install nuscenes-devkit
+```
+
+2. Create the data info files:
+```bash
+cd mmdetection3d
+python ./tools/create_data.py nuscenes \
+    --root-path ./data/nuscenes \
+    --out-dir ./data/nuscenes \
+    --extra-tag nuscenes \
+    --version v1.0-mini
+```
+
+### Validation
+To verify your data preparation:
+```bash
+# Check the symbolic link
+ls -l ./mmdetection3d/data/nuscenes
+
+# Verify data info files exist
+ls ./mmdetection3d/data/nuscenes/nuscenes_infos_*.pkl
+
+# Optional: Preview sample data
+python tools/misc/browse_dataset.py \
+    configs/_base_/datasets/nus-3d.py \
+    --output-dir ./data_preview
+```
+
+## Common Issues and Solutions
+
+1. **Permission Denied**: If you encounter permission issues during download or extraction:
+```bash
+chmod +x tools/create_data.py
+sudo chown -R $USER:$USER data/nuscenes
+```
+
+2. **Disk Space**: Ensure you have sufficient disk space:
+   - Full dataset: ~400GB
+   - Mini dataset: ~5GB
+
+3. **Download Interruption**: If download is interrupted, use `wget -c` to resume:
+```bash
+wget -c https://xxx.cloudfront.net/public/v1.0/v1.0-mini.tgz
+```
+
+## Additional Datasets
+
+For other supported datasets (KITTI, Waymo, etc.), please refer to the [MMDetection3D Data Preparation Guide](https://mmdetection3d.readthedocs.io/en/latest/advanced_guides/datasets/index.html).
 
 ## Training
 
