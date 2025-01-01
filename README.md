@@ -25,16 +25,24 @@ conda activate ./detr3d_env
 
 # Install PyTorch
 pip install --upgrade pip
-conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch
+conda install pytorch torchvision torchaudio cudatoolkit=11.8 -c pytorch
 ```
 
 2. Install MMCV using MIM (OpenMMLab Model Installer):
 ```bash
 pip install openmim fsspec
+mim install mmengine
 mim install mmcv-full
 mim install mmdet
 mim install mmsegmentation
-mim install mmdet3d
+```
+
+```bash
+cd mmdetection3d
+pip install -v -e .
+# "-v" means verbose, or more output
+# "-e" means installing a project in edtiable mode,
+# thus any local modifications made to the code will take effect without reinstallation.
 ```
 
 # Data Preparation
@@ -143,11 +151,6 @@ sudo chown -R $USER:$USER data/nuscenes
 2. **Disk Space**: Ensure you have sufficient disk space:
    - Full dataset: ~400GB
    - Mini dataset: ~5GB
-
-3. **Download Interruption**: If download is interrupted, use `wget -c` to resume:
-```bash
-wget -c https://xxx.cloudfront.net/public/v1.0/v1.0-mini.tgz
-```
 
 ## Additional Datasets
 
