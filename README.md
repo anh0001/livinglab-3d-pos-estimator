@@ -25,7 +25,7 @@ conda activate ./detr3d_env
 
 # Install PyTorch
 pip install --upgrade pip
-conda install pytorch torchvision torchaudio cudatoolkit=11.8 -c pytorch
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
 ```
 
 2. Install MMCV using MIM (OpenMMLab Model Installer):
