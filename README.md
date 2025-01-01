@@ -22,28 +22,50 @@ The following OpenMMLab packages are required:
 ```bash
 conda create --prefix ./detr3d_env python=3.8 -y
 conda activate ./detr3d_env
-
-# Install PyTorch
-pip install --upgrade pip
-conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
 ```
 
-2. Install MMCV using MIM (OpenMMLab Model Installer):
+2. Verify CUDA installation:
 ```bash
-pip install openmim fsspec
-mim install mmengine
-mim install mmcv-full
-mim install mmdet
-mim install mmsegmentation
+# Check NVIDIA driver and CUDA version
+nvidia-smi
+
+# Alternative CUDA version check
+nvcc --version
 ```
 
+3. Install PyTorch with CUDA support:
 ```bash
+# Install PyTorch and related libraries (CUDA 11.1)
+pip install torch==1.9.1+cu111 torchvision==0.10.1+cu111 torchaudio==0.9.1 -f https://download.pytorch.org/whl/torch_stable.html
+```
+
+4. Install OpenMMLab libraries:
+```bash
+# Install MMCV with CUDA support
+pip install mmcv-full==1.3.14 -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.9.1/index.html
+
+# Install other OpenMMLab dependencies
+pip install mmdet==2.16.0
+pip install mmsegmentation==0.17.0
+
+# Install MMDetection3D
 cd mmdetection3d
 pip install -v -e .
-# "-v" means verbose, or more output
-# "-e" means installing a project in edtiable mode,
-# thus any local modifications made to the code will take effect without reinstallation.
 ```
+
+5. Verify installation:
+```bash
+# Verify CUDA recognition in PyTorch
+python -c "import torch; print(torch.version.cuda); print(torch.cuda.is_available())"
+
+# Verify OpenMMLab versions
+python -c "import mmcv; import mmdet; import mmseg; import mmdet3d; print(f'MMCV: {mmcv.__version__}\nMMDet: {mmdet.__version__}\nMMSeg: {mmseg.__version__}\nMMDet3D: {mmdet3d.__version__}')"
+```
+
+Note: If you encounter CUDA-related errors, ensure that:
+- CUDA 11.1 is properly installed on your system
+- Your NVIDIA drivers are compatible with CUDA 11.1
+- Environment variables CUDA_HOME or CUDA_PATH are set correctly
 
 # Data Preparation
 
